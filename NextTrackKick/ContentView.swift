@@ -37,6 +37,28 @@ struct ContentView: View {
                 }
             }
         }
+        .buttonStyle(CircleBackgroundStyle())
+    }
+}
+
+struct CircleBackgroundStyle: ButtonStyle {
+    @State private var isAnimating = false
+
+    private let duration = 0.22
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.all, 36)
+            .background(isAnimating ? .gray.opacity(0.45) : .clear)
+            .containerShape(Circle())
+            .scaleEffect(isAnimating ? 0.86 : 1)
+            .animation(.easeInOut(duration: duration), value: isAnimating)
+            .onChange(of: configuration.isPressed) {
+                isAnimating = true
+                DispatchQueue.main.asyncAfter(deadline: .now() +  duration) {
+                    isAnimating = false
+                }
+            }
     }
 }
 
